@@ -6,6 +6,38 @@ import axios from "axios";
 
 const API_BASE_URL = "https://api.example.com"; // Thay thế bằng API thực của bạn
 
+// Định nghĩa kiểu dữ liệu
+interface ApiResponse<T> {
+  data: T;
+}
+
+interface Song {
+  id: number;
+  title: string;
+  artist: string;
+  album: string;
+  duration: string;
+  year: number;
+  imageUrl: string;
+}
+
+interface Album {
+  id: number;
+  title: string;
+  artist: string;
+  year: number;
+  songCount: number;
+  imageUrl: string;
+}
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+  createdAt: string;
+}
+
 // Tạo instance axios
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -31,21 +63,21 @@ const mockData = {
     { id: 3, title: "Waiting For You", artist: "MONO", album: "22", duration: "04:12", year: 2022, imageUrl: "https://i.scdn.co/image/ab67616d0000b273c9fd5f487d476bd76cbcb880" },
     { id: 4, title: "Có Chắc Yêu Là Đây", artist: "Sơn Tùng MTP", album: "Single", duration: "03:10", year: 2020, imageUrl: "https://i.scdn.co/image/ab67616d0000b273eb479abe6c3f5adae4ebc2fb" },
     { id: 5, title: "Muộn Rồi Mà Sao Còn", artist: "Sơn Tùng MTP", album: "Single", duration: "04:35", year: 2021, imageUrl: "https://i.scdn.co/image/ab67616d0000b273e6c142f6c1f2c6586fabbf4f" },
-  ],
+  ] as Song[],
   albums: [
     { id: 1, title: "22", artist: "MONO", year: 2022, songCount: 7, imageUrl: "https://i.scdn.co/image/ab67616d0000b273c9fd5f487d476bd76cbcb880" },
     { id: 2, title: "m-tp M-TP", artist: "Sơn Tùng MTP", year: 2017, songCount: 10, imageUrl: "https://i.scdn.co/image/ab67616d0000b2736ac35e8707be09eebde81fea" },
     { id: 3, title: "Hoàng", artist: "Hoàng Thùy Linh", year: 2019, songCount: 12, imageUrl: "https://i.scdn.co/image/ab67616d0000b2739ff63bbfd6892c7dba49b6ed" }
-  ],
+  ] as Album[],
   users: [
     { id: 1, username: "admin", email: "admin@example.com", role: "Admin", createdAt: "2023-01-01" },
     { id: 2, username: "user1", email: "user1@example.com", role: "User", createdAt: "2023-02-15" },
     { id: 3, username: "artist1", email: "artist@example.com", role: "Artist", createdAt: "2023-03-20" }
-  ]
+  ] as User[]
 };
 
 // API functions for songs
-export const fetchSongs = async () => {
+export const fetchSongs = async (): Promise<ApiResponse<Song[]>> => {
   // In a real app: return api.get('/songs');
   return new Promise(resolve => {
     setTimeout(() => {
@@ -54,17 +86,17 @@ export const fetchSongs = async () => {
   });
 };
 
-export const fetchSong = async (id: number) => {
+export const fetchSong = async (id: number): Promise<ApiResponse<Song>> => {
   // In a real app: return api.get(`/songs/${id}`);
   return new Promise(resolve => {
     setTimeout(() => {
       const song = mockData.songs.find(song => song.id === id);
-      resolve({ data: song });
+      resolve({ data: song as Song });
     }, 300);
   });
 };
 
-export const createSong = async (songData: any) => {
+export const createSong = async (songData: Omit<Song, 'id'>): Promise<ApiResponse<Song>> => {
   // In a real app: return api.post('/songs', songData);
   return new Promise(resolve => {
     setTimeout(() => {
@@ -78,7 +110,7 @@ export const createSong = async (songData: any) => {
   });
 };
 
-export const updateSong = async (id: number, songData: any) => {
+export const updateSong = async (id: number, songData: Partial<Song>): Promise<ApiResponse<Song>> => {
   // In a real app: return api.put(`/songs/${id}`, songData);
   return new Promise(resolve => {
     setTimeout(() => {
@@ -91,7 +123,7 @@ export const updateSong = async (id: number, songData: any) => {
   });
 };
 
-export const deleteSong = async (id: number) => {
+export const deleteSong = async (id: number): Promise<ApiResponse<{ success: boolean }>> => {
   // In a real app: return api.delete(`/songs/${id}`);
   return new Promise(resolve => {
     setTimeout(() => {
@@ -105,7 +137,7 @@ export const deleteSong = async (id: number) => {
 };
 
 // API functions for albums
-export const fetchAlbums = async () => {
+export const fetchAlbums = async (): Promise<ApiResponse<Album[]>> => {
   // In a real app: return api.get('/albums');
   return new Promise(resolve => {
     setTimeout(() => {
@@ -114,17 +146,17 @@ export const fetchAlbums = async () => {
   });
 };
 
-export const fetchAlbum = async (id: number) => {
+export const fetchAlbum = async (id: number): Promise<ApiResponse<Album>> => {
   // In a real app: return api.get(`/albums/${id}`);
   return new Promise(resolve => {
     setTimeout(() => {
       const album = mockData.albums.find(album => album.id === id);
-      resolve({ data: album });
+      resolve({ data: album as Album });
     }, 300);
   });
 };
 
-export const createAlbum = async (albumData: any) => {
+export const createAlbum = async (albumData: Omit<Album, 'id'>): Promise<ApiResponse<Album>> => {
   // In a real app: return api.post('/albums', albumData);
   return new Promise(resolve => {
     setTimeout(() => {
@@ -138,7 +170,7 @@ export const createAlbum = async (albumData: any) => {
   });
 };
 
-export const updateAlbum = async (id: number, albumData: any) => {
+export const updateAlbum = async (id: number, albumData: Partial<Album>): Promise<ApiResponse<Album>> => {
   // In a real app: return api.put(`/albums/${id}`, albumData);
   return new Promise(resolve => {
     setTimeout(() => {
@@ -151,7 +183,7 @@ export const updateAlbum = async (id: number, albumData: any) => {
   });
 };
 
-export const deleteAlbum = async (id: number) => {
+export const deleteAlbum = async (id: number): Promise<ApiResponse<{ success: boolean }>> => {
   // In a real app: return api.delete(`/albums/${id}`);
   return new Promise(resolve => {
     setTimeout(() => {
@@ -165,7 +197,7 @@ export const deleteAlbum = async (id: number) => {
 };
 
 // API functions for users
-export const fetchUsers = async () => {
+export const fetchUsers = async (): Promise<ApiResponse<User[]>> => {
   // In a real app: return api.get('/users');
   return new Promise(resolve => {
     setTimeout(() => {
@@ -174,17 +206,17 @@ export const fetchUsers = async () => {
   });
 };
 
-export const fetchUser = async (id: number) => {
+export const fetchUser = async (id: number): Promise<ApiResponse<User>> => {
   // In a real app: return api.get(`/users/${id}`);
   return new Promise(resolve => {
     setTimeout(() => {
       const user = mockData.users.find(user => user.id === id);
-      resolve({ data: user });
+      resolve({ data: user as User });
     }, 300);
   });
 };
 
-export const createUser = async (userData: any) => {
+export const createUser = async (userData: Omit<User, 'id' | 'createdAt'>): Promise<ApiResponse<User>> => {
   // In a real app: return api.post('/users', userData);
   return new Promise(resolve => {
     setTimeout(() => {
@@ -199,7 +231,7 @@ export const createUser = async (userData: any) => {
   });
 };
 
-export const updateUser = async (id: number, userData: any) => {
+export const updateUser = async (id: number, userData: Partial<User>): Promise<ApiResponse<User>> => {
   // In a real app: return api.put(`/users/${id}`, userData);
   return new Promise(resolve => {
     setTimeout(() => {
@@ -212,7 +244,7 @@ export const updateUser = async (id: number, userData: any) => {
   });
 };
 
-export const deleteUser = async (id: number) => {
+export const deleteUser = async (id: number): Promise<ApiResponse<{ success: boolean }>> => {
   // In a real app: return api.delete(`/users/${id}`);
   return new Promise(resolve => {
     setTimeout(() => {
