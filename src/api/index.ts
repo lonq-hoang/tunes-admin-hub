@@ -34,6 +34,7 @@ interface User {
   id: number;
   username: string;
   email: string;
+  password?: string; // Password is optional in responses
   role: string;
   createdAt: string;
 }
@@ -70,9 +71,9 @@ const mockData = {
     { id: 3, title: "Hoàng", artist: "Hoàng Thùy Linh", year: 2019, songCount: 12, imageUrl: "https://i.scdn.co/image/ab67616d0000b2739ff63bbfd6892c7dba49b6ed" }
   ] as Album[],
   users: [
-    { id: 1, username: "admin", email: "admin@example.com", role: "Admin", createdAt: "2023-01-01" },
-    { id: 2, username: "user1", email: "user1@example.com", role: "User", createdAt: "2023-02-15" },
-    { id: 3, username: "artist1", email: "artist@example.com", role: "Artist", createdAt: "2023-03-20" }
+    { id: 1, username: "admin", email: "admin@example.com", password: "admin123", role: "Admin", createdAt: "2023-01-01" },
+    { id: 2, username: "user1", email: "user1@example.com", password: "user123", role: "User", createdAt: "2023-02-15" },
+    { id: 3, username: "artist1", email: "artist@example.com", password: "artist123", role: "Artist", createdAt: "2023-03-20" }
   ] as User[]
 };
 
@@ -201,7 +202,12 @@ export const fetchUsers = async (): Promise<ApiResponse<User[]>> => {
   // In a real app: return api.get('/users');
   return new Promise(resolve => {
     setTimeout(() => {
-      resolve({ data: mockData.users });
+      // Don't return passwords in the response
+      const usersWithoutPasswords = mockData.users.map(user => {
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+      });
+      resolve({ data: usersWithoutPasswords });
     }, 500);
   });
 };
@@ -211,7 +217,11 @@ export const fetchUser = async (id: number): Promise<ApiResponse<User>> => {
   return new Promise(resolve => {
     setTimeout(() => {
       const user = mockData.users.find(user => user.id === id);
-      resolve({ data: user as User });
+      if (user) {
+        // Don't return password in the response
+        const { password, ...userWithoutPassword } = user;
+        resolve({ data: userWithoutPassword as User });
+      }
     }, 300);
   });
 };
@@ -226,7 +236,10 @@ export const createUser = async (userData: Omit<User, 'id' | 'createdAt'>): Prom
         createdAt: new Date().toISOString().split('T')[0]
       };
       mockData.users.push(newUser);
-      resolve({ data: newUser });
+      
+      // Don't return password in the response
+      const { password, ...userWithoutPassword } = newUser;
+      resolve({ data: userWithoutPassword });
     }, 500);
   });
 };
@@ -238,7 +251,10 @@ export const updateUser = async (id: number, userData: Partial<User>): Promise<A
       const index = mockData.users.findIndex(user => user.id === id);
       if (index !== -1) {
         mockData.users[index] = { ...mockData.users[index], ...userData };
-        resolve({ data: mockData.users[index] });
+        
+        // Don't return password in the response
+        const { password, ...userWithoutPassword } = mockData.users[index];
+        resolve({ data: userWithoutPassword });
       }
     }, 500);
   });

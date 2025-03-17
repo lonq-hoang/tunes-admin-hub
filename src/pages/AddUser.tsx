@@ -13,6 +13,7 @@ import { ArrowLeft } from "lucide-react";
 const AddUser = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState("User");
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -21,8 +22,8 @@ const AddUser = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!username || !email) {
-      toast.error("Vui lòng điền tên người dùng và email");
+    if (!username || !email || !password) {
+      toast.error("Vui lòng điền đầy đủ thông tin");
       return;
     }
     
@@ -32,6 +33,7 @@ const AddUser = () => {
       const userData = {
         username,
         email,
+        password,
         role
       };
       
@@ -86,6 +88,18 @@ const AddUser = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Nhập email"
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password">Mật khẩu</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Nhập mật khẩu"
                 required
               />
             </div>

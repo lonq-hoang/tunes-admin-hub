@@ -14,9 +14,11 @@ const EditUser = () => {
   const { id } = useParams<{ id: string }>();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [changePassword, setChangePassword] = useState(false);
   
   const navigate = useNavigate();
   
@@ -55,11 +57,15 @@ const EditUser = () => {
     try {
       setIsSubmitting(true);
       
-      const userData = {
+      const userData: any = {
         username,
         email,
         role
       };
+      
+      if (changePassword && password) {
+        userData.password = password;
+      }
       
       await updateUser(parseInt(id), userData);
       toast.success("Cập nhật người dùng thành công!");
@@ -122,6 +128,33 @@ const EditUser = () => {
                 placeholder="Nhập email"
                 required
               />
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2 mb-2">
+                <input
+                  type="checkbox"
+                  id="changePassword"
+                  checked={changePassword}
+                  onChange={() => setChangePassword(!changePassword)}
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <Label htmlFor="changePassword" className="cursor-pointer">Đổi mật khẩu</Label>
+              </div>
+              
+              {changePassword && (
+                <div className="space-y-2">
+                  <Label htmlFor="password">Mật khẩu mới</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Nhập mật khẩu mới"
+                    required={changePassword}
+                  />
+                </div>
+              )}
             </div>
             
             <div className="space-y-2">
