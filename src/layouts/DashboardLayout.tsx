@@ -153,10 +153,12 @@ const DashboardLayout = () => {
           </div>
           
           <Button 
-            variant="outline" 
+            variant={isDarkMode ? "default" : "outline"}
             className={cn(
-              "w-full justify-start border-sidebar-border",
-              isDarkMode ? "text-white" : "text-black" 
+              "w-full justify-start",
+              isDarkMode 
+                ? "bg-white text-black hover:bg-white/90 border border-sidebar-border" 
+                : "border-sidebar-border text-black"
             )}
           >
             <LogOut className="mr-2 h-4 w-4" />
