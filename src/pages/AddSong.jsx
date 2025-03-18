@@ -38,7 +38,7 @@ const AddSong = () => {
       const file = e.target.files[0];
       setAudioFile(file);
       
-      // Get duration from audio file
+      // Automatically get duration from audio file
       const audio = new Audio();
       audio.src = URL.createObjectURL(file);
       audio.onloadedmetadata = () => {
@@ -66,6 +66,7 @@ const AddSong = () => {
 
   const clearAudio = () => {
     setAudioFile(null);
+    setDuration("");
     if (audioInputRef.current) {
       audioInputRef.current.value = '';
     }
@@ -75,34 +76,35 @@ const AddSong = () => {
     e.preventDefault();
     
     if (!title || !artist) {
-      toast.error("Vui lòng điền tên bài hát và nghệ sĩ");
+      toast.error("Please enter song title and artist name");
       return;
     }
 
     if (!audioFile) {
-      toast.error("Vui lòng tải lên file nhạc");
+      toast.error("Please upload an MP3 file");
       return;
     }
     
     try {
       setIsSubmitting(true);
       
-      const songData = {
-        title,
-        artist,
-        album: album || "Single",
-        duration,
-        year: parseInt(year),
-        imageUrl: image || "https://i.scdn.co/image/ab67616d0000b273496e92aaa8f7a25e501dcb86",
-        audioFile
-      };
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('artist', artist);
+      formData.append('album', album || 'Single');
+      formData.append('duration', duration);
+      formData.append('year', year);
+      if (image) {
+        formData.append('image', image);
+      }
+      formData.append('audioFile', audioFile);
       
-      await createSong(songData);
-      toast.success("Thêm bài hát thành công!");
+      await createSong(formData);
+      toast.success("Song added successfully!");
       navigate("/songs");
     } catch (error) {
       console.error("Error creating song:", error);
-      toast.error("Không thể thêm bài hát");
+      toast.error("Could not add song");
     } finally {
       setIsSubmitting(false);
     }
@@ -118,38 +120,38 @@ const AddSong = () => {
           className="mr-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Quay lại
+          Back
         </Button>
-        <h1 className="text-3xl font-bold">Thêm bài hát mới</h1>
+        <h1 className="text-3xl font-bold">Add New Song</h1>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Thông tin bài hát</CardTitle>
+              <CardTitle>Song Information</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="title">Tên bài hát</Label>
+                    <Label htmlFor="title">Song Title</Label>
                     <Input
                       id="title"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="Nhập tên bài hát"
+                      placeholder="Enter song title"
                       required
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="artist">Nghệ sĩ</Label>
+                    <Label htmlFor="artist">Artist</Label>
                     <Input
                       id="artist"
                       value={artist}
                       onChange={(e) => setArtist(e.target.value)}
-                      placeholder="Nhập tên nghệ sĩ"
+                      placeholder="Enter artist name"
                       required
                     />
                   </div>
@@ -160,12 +162,12 @@ const AddSong = () => {
                       id="album"
                       value={album}
                       onChange={(e) => setAlbum(e.target.value)}
-                      placeholder="Nhập tên album (để trống nếu là single)"
+                      placeholder="Enter album name (leave empty if single)"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="year">Năm phát hành</Label>
+                    <Label htmlFor="year">Release Year</Label>
                     <Input
                       id="year"
                       type="number"
@@ -173,17 +175,17 @@ const AddSong = () => {
                       max={new Date().getFullYear().toString()}
                       value={year}
                       onChange={(e) => setYear(e.target.value)}
-                      placeholder="Nhập năm phát hành"
+                      placeholder="Enter release year"
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="duration">Thời lượng</Label>
+                    <Label htmlFor="duration">Duration</Label>
                     <Input
                       id="duration"
                       value={duration}
                       onChange={(e) => setDuration(e.target.value)}
-                      placeholder="Tự động lấy từ file nhạc"
+                      placeholder="Auto-detected from MP3"
                       readOnly
                     />
                   </div>
@@ -191,7 +193,7 @@ const AddSong = () => {
 
                 {/* Audio File Upload */}
                 <div className="mt-6 space-y-4">
-                  <Label>File nhạc</Label>
+                  <Label>Audio File</Label>
                   <div className="flex flex-col items-center space-y-4">
                     <div 
                       className="w-full border-2 border-dashed rounded-md p-6 flex flex-col items-center justify-center cursor-pointer"
@@ -224,9 +226,9 @@ const AddSong = () => {
                       ) : (
                         <>
                           <Upload className="h-10 w-10 text-muted-foreground mb-2" />
-                          <p className="text-sm font-medium mb-1">Tải file nhạc lên</p>
+                          <p className="text-sm font-medium mb-1">Upload MP3</p>
                           <p className="text-xs text-muted-foreground">
-                            MP3 (Tối đa 10MB)
+                            MP3 files only (Max 10MB)
                           </p>
                         </>
                       )}
@@ -248,7 +250,7 @@ const AddSong = () => {
                     disabled={isSubmitting}
                     className="min-w-[120px]"
                   >
-                    {isSubmitting ? "Đang lưu..." : "Lưu bài hát"}
+                    {isSubmitting ? "Saving..." : "Save Song"}
                   </Button>
                 </div>
               </form>
@@ -259,7 +261,7 @@ const AddSong = () => {
         <div>
           <Card>
             <CardHeader>
-              <CardTitle>Ảnh bìa bài hát</CardTitle>
+              <CardTitle>Cover Image</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col items-center space-y-4">
@@ -289,9 +291,9 @@ const AddSong = () => {
                       onClick={triggerFileInput}
                     >
                       <Upload className="h-10 w-10 text-muted-foreground mb-2" />
-                      <p className="text-sm font-medium mb-1">Tải ảnh lên</p>
+                      <p className="text-sm font-medium mb-1">Upload Image</p>
                       <p className="text-xs text-muted-foreground">
-                        SVG, PNG, JPG or GIF (Tối đa 2MB)
+                        SVG, PNG, JPG or GIF (Max 2MB)
                       </p>
                     </div>
                   )}
@@ -312,7 +314,7 @@ const AddSong = () => {
                   onClick={triggerFileInput}
                 >
                   <Upload className="h-4 w-4 mr-2" />
-                  {image ? "Thay đổi ảnh" : "Chọn ảnh"}
+                  {image ? "Change Image" : "Select Image"}
                 </Button>
               </div>
             </CardContent>

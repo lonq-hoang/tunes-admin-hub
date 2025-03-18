@@ -1,7 +1,4 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -25,37 +22,33 @@ const queryClient = new QueryClient();
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <ToastContainer 
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-        <Routes>
-          <Route path="/" element={<DashboardLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="songs" element={<Songs />} />
-            <Route path="songs/add" element={<AddSong />} />
-            <Route path="songs/edit/:id" element={<EditSong />} />
-            <Route path="albums" element={<Albums />} />
-            <Route path="albums/add" element={<AddAlbum />} />
-            <Route path="albums/edit/:id" element={<EditAlbum />} />
-            <Route path="users" element={<Users />} />
-            <Route path="users/add" element={<AddUser />} />
-            <Route path="users/edit/:id" element={<EditUser />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </TooltipProvider>
+      <ToastContainer 
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <Routes>
+        <Route path="/" element={<DashboardLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="songs" element={<Songs />} />
+          <Route path="songs/add" element={<AddSong />} />
+          <Route path="songs/edit/:id" element={<EditSong />} />
+          <Route path="albums" element={<Albums />} />
+          <Route path="albums/add" element={<AddAlbum />} />
+          <Route path="albums/edit/:id" element={<EditAlbum />} />
+          <Route path="users" element={<Users />} />
+          <Route path="users/add" element={<AddUser />} />
+          <Route path="users/edit/:id" element={<EditUser />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </QueryClientProvider>
   );
 };
