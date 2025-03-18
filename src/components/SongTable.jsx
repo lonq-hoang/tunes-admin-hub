@@ -4,23 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Play, Edit, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-interface Song {
-  id: number;
-  title: string;
-  artist: string;
-  album: string;
-  duration: string;
-  year: number;
-  imageUrl: string;
-}
-
-interface SongTableProps {
-  songs: Song[];
-  onDelete: (id: number) => void;
-  onPlay?: (id: number) => void;
-}
-
-const SongTable = ({ songs, onDelete, onPlay }: SongTableProps) => {
+const SongTable = ({ songs, onDelete, onPlay }) => {
   return (
     <div className="overflow-x-auto rounded-md border">
       <Table>
