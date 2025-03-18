@@ -21,13 +21,13 @@ import { Search, Grid, List } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const Songs = () => {
-  const [songs, setSongs] = useState([]);
-  const [filteredSongs, setFilteredSongs] = useState([]);
+  const [songs, setSongs] = useState<any[]>([]);
+  const [filteredSongs, setFilteredSongs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [songToDelete, setSongToDelete] = useState(null);
-  const [selectedSong, setSelectedSong] = useState(null);
+  const [songToDelete, setSongToDelete] = useState<number | null>(null);
+  const [selectedSong, setSelectedSong] = useState<any | null>(null);
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -64,7 +64,7 @@ const Songs = () => {
     setFilteredSongs(filtered);
   }, [searchQuery, songs]);
   
-  const handleDeleteClick = (id) => {
+  const handleDeleteClick = (id: number) => {
     setSongToDelete(id);
     setDeleteDialogOpen(true);
   };
@@ -86,7 +86,7 @@ const Songs = () => {
     }
   };
   
-  const handlePlayClick = (id) => {
+  const handlePlayClick = (id: number) => {
     const song = songs.find(s => s.id === id);
     if (song) {
       setSelectedSong(song);

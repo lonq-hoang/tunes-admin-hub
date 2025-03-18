@@ -5,6 +5,16 @@ import { Edit, Trash2, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
+interface SongCardProps {
+  id: number;
+  title: string;
+  artist: string;
+  album?: string;
+  imageUrl: string;
+  onDelete: (id: number) => void;
+  onPlay?: (id: number) => void;
+}
+
 const SongCard = ({
   id,
   title,
@@ -13,7 +23,7 @@ const SongCard = ({
   imageUrl,
   onDelete,
   onPlay
-}) => {
+}: SongCardProps) => {
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] bg-card/90 backdrop-blur-xs">
       <div className="relative group">

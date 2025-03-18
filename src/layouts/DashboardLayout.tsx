@@ -65,7 +65,7 @@ const DashboardLayout = () => {
     { icon: Users, label: "Người dùng", path: "/users" },
   ];
 
-  const isActiveRoute = (path) => {
+  const isActiveRoute = (path: string) => {
     if (path === "/") {
       return location.pathname === path;
     }
